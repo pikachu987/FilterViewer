@@ -10,10 +10,8 @@ import UIKit
 import GPUImage
 
 class FilterCell: UITableViewCell {
-    @IBOutlet weak var filterImageView: UIImageView!
-
-    private var filterImage: UIImage?
-    private var originImage: UIImage?
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var filterImageView: UIImageView!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,26 +20,12 @@ class FilterCell: UITableViewCell {
         self.filterImageView.contentMode = .scaleAspectFill
         self.filterImageView.clipsToBounds = true
         self.clipsToBounds = true
+        self.titleLabel.textAlignment = .center
     }
 
-    func setEntity(_ row: Int, item: FilterItem, isOrigin: Bool){
-        let image = ImageHelper.shared.images[row]
-        self.originImage = image
-        self.filterImageView?.image = image
-        if !isOrigin{
-            DispatchQueue.global().async {
-                let filter = item.filter
-                let stillImageSource = GPUImagePicture(image: image)
-                stillImageSource?.addTarget(filter)
-                filter.useNextFrameForImageCapture()
-                stillImageSource?.processImage()
-                let image = filter.imageFromCurrentFramebuffer()
-                DispatchQueue.main.async {
-                    self.filterImage = image
-                    self.filterImageView.image = image
-                }
-            }
-        }
+    func setEntity(_ item: FilterItem){
+        self.filterImageView.image = item.image
+        self.titleLabel.text = item.name
     }
 
     

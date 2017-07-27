@@ -15,22 +15,32 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="205"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SfP-3e-g8e" id="xJq-FN-y6m">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="205"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="204.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NtQ-M2-Tvp">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="204.5"/>
+                        <rect key="frame" x="0.0" y="33" width="375" height="171.5"/>
                     </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q7P-US-a7x">
+                        <rect key="frame" x="8" y="6" width="359" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="NtQ-M2-Tvp" firstAttribute="top" secondItem="xJq-FN-y6m" secondAttribute="top" id="FZb-VX-hKm"/>
+                    <constraint firstItem="Q7P-US-a7x" firstAttribute="top" secondItem="xJq-FN-y6m" secondAttribute="top" constant="6" id="12X-ji-cX7"/>
+                    <constraint firstAttribute="trailing" secondItem="Q7P-US-a7x" secondAttribute="trailing" constant="8" id="9NV-jh-V6e"/>
+                    <constraint firstItem="NtQ-M2-Tvp" firstAttribute="top" secondItem="Q7P-US-a7x" secondAttribute="bottom" constant="6" id="GVc-i4-2lo"/>
                     <constraint firstAttribute="bottom" secondItem="NtQ-M2-Tvp" secondAttribute="bottom" id="eby-hm-JWj"/>
+                    <constraint firstItem="Q7P-US-a7x" firstAttribute="leading" secondItem="xJq-FN-y6m" secondAttribute="leading" constant="8" id="fFh-6l-CJN"/>
                     <constraint firstAttribute="trailing" secondItem="NtQ-M2-Tvp" secondAttribute="trailing" id="kfs-Mp-MYC"/>
                     <constraint firstItem="NtQ-M2-Tvp" firstAttribute="leading" secondItem="xJq-FN-y6m" secondAttribute="leading" id="rkQ-f0-WRz"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="filterImageView" destination="NtQ-M2-Tvp" id="Ajc-Wf-LNi"/>
+                <outlet property="titleLabel" destination="Q7P-US-a7x" id="4dj-7k-cz8"/>
             </connections>
             <point key="canvasLocation" x="-148.5" y="2.5"/>
         </tableViewCell>

@@ -7,85 +7,70 @@
 //
 
 import UIKit
+import GPUImage
 
 class ViewController: UIViewController {
-    @IBOutlet weak var collectionView: UICollectionView!
-    fileprivate var page = 0
-    fileprivate var isOrigin = false
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var tableView: UITableView!
+
+    fileprivate var filterArray = [FilterItem]()
+
+    private let image = UIImage(named: "image3.jpeg")
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
+        self.imageView.image = self.image
+        self.imageView.contentMode = .scaleAspectFill
+        self.imageView.clipsToBounds = true
 
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-        self.collectionView.showsVerticalScrollIndicator = false
-        self.collectionView.showsHorizontalScrollIndicator = false
-        self.collectionView.register(UINib(nibName: "FiltersCell", bundle: Bundle.main), forCellWithReuseIdentifier: "FiltersCell")
-        self.collectionView.collectionViewLayout = .detailLayout()
-        self.collectionView.isPagingEnabled = true
+        self.titleLabel.textAlignment = .center
+        self.titleLabel.text = "Original"
 
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.separatorStyle = .none
+        self.tableView.showsVerticalScrollIndicator = false
+        self.tableView.showsHorizontalScrollIndicator = false
+        self.tableView.register(UINib(nibName: "FilterCell", bundle: Bundle.main), forCellReuseIdentifier: "FilterCell")
 
-        self.title = FilterHelper.shared.filterArray[self.page].name
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "원본보기", style: .done, target: self, action: #selector(self.originAction(_:)))
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "필터보기", style: .done, target: self, action: #selector(self.convertAction(_:)))
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { 
-            self.collectionView.reloadData()
-        }
+        self.makeFilter()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
-    @objc private func originAction(_ sender: UIBarButtonItem){
-        if self.isOrigin == true{
+    //필터 넣기
+    private func makeFilter(){
+        guard let image = self.image else {
             return
         }
-        self.isOrigin = true
-        self.collectionView.reloadData()
-    }
 
-    @objc private func convertAction(_ sender: UIBarButtonItem){
-        if self.isOrigin == false{
-            return
-        }
-        UIApplication.shared.beginIgnoringInteractionEvents()
-        self.isOrigin = false
-        self.collectionView.reloadData()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            UIApplication.shared.endIgnoringInteractionEvents()
-        }
-    }
-
-}
-
-
-
-extension ViewController: UICollectionViewDelegate{
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let page = Int(scrollView.contentOffset.x / (scrollView.contentSize.width / CGFloat(FilterHelper.shared.filterArray.count)))
-        if page != self.page{
-            self.page = page
-            self.title = FilterHelper.shared.filterArray[self.page].name
+        FilterHelper.shared.makeFilter(image){ (filter) in
+            self.filterArray.append(filter)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
 }
 
 
-extension ViewController: UICollectionViewDataSource{
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+extension ViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 180
+    }
+}
+
+extension ViewController: UITableViewDataSource{
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return FilterHelper.shared.filterArray.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.filterArray.count
     }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FiltersCell", for: indexPath) as! FiltersCell
-        cell.setEntity(FilterHelper.shared.filterArray[indexPath.row], isOrigin: self.isOrigin)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "FilterCell", for: indexPath) as! FilterCell
+        cell.setEntity(self.filterArray[indexPath.row])
         return cell
     }
 }

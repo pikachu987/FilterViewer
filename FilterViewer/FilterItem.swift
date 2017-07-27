@@ -6,15 +6,14 @@
 //  Copyright © 2017년 pikachu987. All rights reserved.
 //
 
-import Foundation
-import GPUImage
+import UIKit
 
 struct FilterItem {
-    var filter = GPUImageFilter()
     var name = ""
+    var image: UIImage?
 
-    init(_ name: String, filter: GPUImageFilter) {
-        self.filter = filter
+    init(_ name: String, image: UIImage?) {
+        self.image = image
         self.name = name
     }
 
